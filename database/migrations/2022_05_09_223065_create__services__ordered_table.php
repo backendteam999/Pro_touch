@@ -13,7 +13,7 @@ class CreateServicesOrderedTable extends Migration
      */
     public function up()
     {
-        Schema::create('_services__ordered', function (Blueprint $table) {
+        Schema::create('services_ordereds', function (Blueprint $table) {
             $table->id();
             $table->date('Date');
             $table->foreignId('services_id');

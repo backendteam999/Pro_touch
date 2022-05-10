@@ -13,7 +13,7 @@ class CreateDeviceTable extends Migration
      */
     public function up()
     {
-        Schema::create('device', function (Blueprint $table) {
+        Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id');
             $table->string('name');

@@ -14,7 +14,7 @@ class CreateReservationTable extends Migration
 
     public function up()
     {
-        Schema::create('_reservation', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id');
             $table->foreignId('doctor_id');

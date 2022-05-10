@@ -13,7 +13,7 @@ class CreateReceptionTable extends Migration
      */
     public function up()
     {
-        Schema::create('_reception', function (Blueprint $table) {
+        Schema::create('receptions', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->integer('age');

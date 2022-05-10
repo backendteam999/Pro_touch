@@ -13,7 +13,7 @@ class CreateOffersOrderedTable extends Migration
      */
     public function up()
     {
-        Schema::create('_offers_ordered', function (Blueprint $table) {
+        Schema::create('offers_ordereds', function (Blueprint $table) {
             $table->id();
             $table->date('Date');
             $table->foreignId('offer_id');

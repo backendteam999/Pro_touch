@@ -13,7 +13,7 @@ class CreateOfferTable extends Migration
      */
     public function up()
     {
-        Schema::create('_offer', function (Blueprint $table) {
+        Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clinic_id');
             $table->foreignId('service_id');

@@ -14,7 +14,7 @@ class CreateMedicalLogTable extends Migration
 
     public function up()
     {
-        Schema::create('_medical_log', function (Blueprint $table) {
+        Schema::create('medical_logs', function (Blueprint $table) {
             $table->id();
             $table->integer('weight');
             $table->string('Allergic');
