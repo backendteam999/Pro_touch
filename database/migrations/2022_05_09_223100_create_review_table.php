@@ -16,7 +16,7 @@ class CreateReviewTable extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('patient_id');
-            $table->foreign('patient_id')->references('id')->on('patients');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('doctor_id');
             $table->foreign('doctor_id')->references('id')->on('doctors');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('clinic_id');

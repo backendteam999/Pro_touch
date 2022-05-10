@@ -18,7 +18,7 @@ class CreateOfferTable extends Migration
             $table->unsignedInteger('clinic_id');
             $table->foreign('clinic_id')->references('id')->on('clinics');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('services');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade')->onUpdate('cascade');
             $table->integer('offer_price');
             $table->date('start_date');
             $table->date('due_date');
