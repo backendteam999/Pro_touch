@@ -14,7 +14,7 @@ class CreateDeviceTable extends Migration
     public function up()
     {
         Schema::create('devices', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services');//->onDelete('cascade')->onUpdate('cascade');
             $table->string('name');

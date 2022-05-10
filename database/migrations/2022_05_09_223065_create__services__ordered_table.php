@@ -14,7 +14,7 @@ class CreateServicesOrderedTable extends Migration
     public function up()
     {
         Schema::create('services_ordereds', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->date('Date');
             $table->unsignedInteger('services_id');
             $table->foreign('services_id')->references('id')->on('services');//->onDelete('cascade')->onUpdate('cascade');

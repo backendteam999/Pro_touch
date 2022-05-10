@@ -14,7 +14,7 @@ class CreateOfferTable extends Migration
     public function up()
     {
         Schema::create('offers', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->unsignedInteger('clinic_id');
             $table->foreign('clinic_id')->references('id')->on('clinics');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('service_id');
