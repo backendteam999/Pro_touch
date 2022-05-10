@@ -9,12 +9,11 @@ class Reception extends Model
 {
     use HasFactory;
 
-    protected $table = 'receptions';
-    protected $fillable = [
-        'id','name','age ','gender','skills','user_id ',
-        'created_at','updated_at'
-    ];
-    protected $hidden =[
+    public function user(){
+        return $this->belongsTo(User::class,'id');
+    }
 
-    ];
+    public function reservation(){
+        return $this->hasMany(Reservation::class,'id','id');
+    }
 }

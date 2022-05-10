@@ -9,12 +9,11 @@ class Reservation extends Model
 {
     use HasFactory;
 
-    protected $table = 'reservations';
-    protected $fillable = [
-        'id','patient_id','doctor_id','clinic_id','reception_id ','event_id ',
-        'service_id','Date','status','Confirmation','offset','created_at','updated_at'
-    ];
-    protected $hidden =[
+    public function patient (){
+        return $this->belongsTo(Patient::class,'id');
+    }
 
-    ];
+    public function clinic(){
+        return $this->belongsTo(Clinic::class,'id');
+    }
 }

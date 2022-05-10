@@ -9,12 +9,15 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $table = 'services';
-    protected $fillable = [
-        'id','clinic_id','price','description',
-        'created_at','updated_at'
-    ];
-    protected $hidden =[
+    public function device (){
+        return $this->hasMany(Device::class,'id','id');
+    }
 
-    ];
+    public function services_ordered(){
+        return $this->hasMany(Services_ordered::class,'id','id');
+    }
+
+    public function clinic(){
+        return $this->belongsTo(Clinic::class,'id','id');
+    }
 }

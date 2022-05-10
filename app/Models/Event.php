@@ -9,10 +9,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $table = 'events';
-    protected $fillable = [
-        'id','start_date','end_date','created_at','updated_at'];
-    protected $hidden =[
-
-    ];
+    public function reservation(){
+        return $this->hasOne(Reservation::class,'id','id');
+    }
 }
