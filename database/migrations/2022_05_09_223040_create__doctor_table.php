@@ -22,7 +22,7 @@ class CreateDoctorTable extends Migration
             $table->unsignedInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('clinic_id');
-            $table->foreign('clinic_id')->references('id')->on('_clinic');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('clinic_id')->references('id')->on('clinics');//->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

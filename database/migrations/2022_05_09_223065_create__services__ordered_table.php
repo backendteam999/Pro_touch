@@ -17,7 +17,7 @@ class CreateServicesOrderedTable extends Migration
             $table->id();
             $table->date('Date');
             $table->unsignedInteger('services_id');
-            $table->foreign('services_id')->references('id')->on('_services');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('services_id')->references('id')->on('services');//->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

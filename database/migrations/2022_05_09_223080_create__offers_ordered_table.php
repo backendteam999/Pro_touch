@@ -17,7 +17,7 @@ class CreateOffersOrderedTable extends Migration
             $table->id();
             $table->date('Date');
             $table->unsignedInteger('offer_id');
-            $table->foreign('offer_id')->references('id')->on('_offer');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('offer_id')->references('id')->on('offers');//->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

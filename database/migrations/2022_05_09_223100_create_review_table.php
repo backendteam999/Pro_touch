@@ -16,15 +16,15 @@ class CreateReviewTable extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('patient_id');
-            $table->foreign('patient_id')->references('id')->on('_patient');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('patient_id')->references('id')->on('patients');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('doctor_id');
-            $table->foreign('doctor_id')->references('id')->on('_doctor');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('doctor_id')->references('id')->on('doctors');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('clinic_id');
-            $table->foreign('clinic_id')->references('id')->on('_clinic');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('clinic_id')->references('id')->on('clinics');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('_services');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('service_id')->references('id')->on('services');//->onDelete('cascade')->onUpdate('cascade');
             $table->unsignedInteger('reservation_id');
-            $table->foreign('reservation_id')->references('id')->on('_reservation');//->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('reservation_id')->references('id')->on('reservations');//->onDelete('cascade')->onUpdate('cascade');
             $table->text('notes');
             $table->date('date');
             $table->text('next_view');
