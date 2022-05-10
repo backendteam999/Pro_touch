@@ -15,11 +15,16 @@ class CreateReviewTable extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id');
-            $table->foreignId('doctor_id');
-            $table->foreignId('clinic_id');
-            $table->foreignId('service_id');
-            $table->foreignId('reservation_id');
+            $table->unsignedInteger('patient_id');
+            $table->foreign('patient_id')->references('id')->on('_patient');//->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedInteger('doctor_id');
+            $table->foreign('doctor_id')->references('id')->on('_doctor');//->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedInteger('clinic_id');
+            $table->foreign('clinic_id')->references('id')->on('_clinic');//->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('_services');//->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedInteger('reservation_id');
+            $table->foreign('reservation_id')->references('id')->on('_reservation');//->onDelete('cascade')->onUpdate('cascade');
             $table->text('notes');
             $table->date('date');
             $table->text('next_view');

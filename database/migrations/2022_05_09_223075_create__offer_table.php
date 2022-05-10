@@ -15,8 +15,10 @@ class CreateOfferTable extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinic_id');
-            $table->foreignId('service_id');
+            $table->unsignedInteger('clinic_id');
+            $table->foreign('clinic_id')->references('id')->on('_clinic');//->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('_services');//->onDelete('cascade')->onUpdate('cascade');
             $table->integer('offer_price');
             $table->date('start_date');
             $table->date('due_date');

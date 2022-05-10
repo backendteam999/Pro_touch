@@ -16,7 +16,8 @@ class CreateServicesOrderedTable extends Migration
         Schema::create('services_ordereds', function (Blueprint $table) {
             $table->id();
             $table->date('Date');
-            $table->foreignId('services_id');
+            $table->unsignedInteger('services_id');
+            $table->foreign('services_id')->references('id')->on('_services');//->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

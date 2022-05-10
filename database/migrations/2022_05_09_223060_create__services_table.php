@@ -15,7 +15,8 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clinic_id');
+            $table->unsignedInteger('clinic_id');
+            $table->foreign('clinic_id')->references('id')->on('_clinic');//->onDelete('cascade')->onUpdate('cascade');
             $table->integer('price');
             $table->text('description');
             $table->timestamps();

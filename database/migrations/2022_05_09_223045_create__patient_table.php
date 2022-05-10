@@ -19,7 +19,8 @@ class CreatePatientTable extends Migration
             $table->integer('age');
             $table->string('gender');
             $table->text('skills');
-            $table->foreignId('user_id');
+            $table->unsignedInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');//->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

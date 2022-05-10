@@ -24,7 +24,8 @@ class CreateMedicalLogTable extends Migration
             $table->string('surgery');
             $table->string('medicine');
             $table->text('notes');
-            $table->foreignId('patient_id');
+            $table->unsignedInteger('patient_id');
+            $table->foreign('patient_id')->references('id')->on('_patient');//->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
