@@ -10,6 +10,6 @@ class Offer extends Model
     use HasFactory;
 
     public function clinic(){
-        return $this->belongsTo(Clinic::class,'id','id');
+        return $this->belongsTo(Clinic::class,'id');
     }
 }
