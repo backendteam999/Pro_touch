@@ -9,6 +9,6 @@ class ML_Nutrition_Clinic extends Model
 {
     use HasFactory;
     public function Medical_log(){
-        return $this->belongsTo(Medical_log::class,'id');
+        return $this->belongsTo(Medical_log::class,'medical_log_id');
     }
 }
