@@ -12,12 +12,11 @@ class Medical_log extends Model
     public function patient(){
         return $this->belongsTo(Patient::class,'id');
     }
-    public function ML_Dental_Clinic(){
-        return $this->hasOne(ML_Dental_Clinic::class,'id','id');
-    }
-
-
     public function ML_Nutrition_Clinic(){
-        return $this->hasOne(ML_Nutrition_Clinic::class,'id','id');
+        return $this->hasMany(ML_Nutrition_Clinic::class,'medical_log_id','id');
     }
+    public function ML_Dermatology_laser_clinic(){
+        return $this->hasOne(ML_Dermatology_laser_clinic::class,'medical_log_id','id');
+    }
+
 }
