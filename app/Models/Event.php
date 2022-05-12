@@ -9,7 +9,8 @@ class Event extends Model
 {
     use HasFactory;
 
-    public function reservation(){
-        return $this->hasOne(Reservation::class,'id','id');
+    public function reservation()
+    {
+        return $this->hasOne(Reservation::class, 'id', 'id');
     }
 }
