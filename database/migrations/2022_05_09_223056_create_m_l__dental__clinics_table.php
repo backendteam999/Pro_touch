@@ -17,7 +17,8 @@ class CreateMLDentalClinicsTable extends Migration
             $table->increments('id');
             $table->Boolean('smoking');
             $table->String('Oral_Allergic');
-            $table->String('Oral_Allergic');
+            $table->unsignedInteger('medical_log_id');
+            $table->foreign('medical_log_id')->references('id')->on('medical_log');
             $table->timestamps();
         });
     }
