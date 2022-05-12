@@ -12,4 +12,7 @@ class Medical_log extends Model
     public function patient(){
         return $this->belongsTo(Patient::class,'id');
     }
+    public function ML_Nutrition_Clinic(){
+        return $this->hasMany(ML_Nutrition_Clinic::class,'id','id');
+    }
 }
