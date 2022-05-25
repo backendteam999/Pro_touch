@@ -15,11 +15,11 @@ class CreateMLNutritionClinicsTable extends Migration
     {
         Schema::create('m_l__nutrition__clinics', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('food allergy');
+            $table->string('food_allergy');
             $table->string('job');
             $table->integer('length');
             $table->integer('age');
-            $table->text('sport schedule');
+            $table->text('sport_schedule');
             $table->unsignedInteger('medical_log_id');
             $table->foreign('medical_log_id')->references('id')->on('medical_log');
 

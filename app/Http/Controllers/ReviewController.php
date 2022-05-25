@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Doctor;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -12,7 +14,9 @@ class ReviewController extends Controller
     public function index()
     {
         $review = Review::get();
-        return response()->json(new Message($review, '200', true, 'info', 'done', 'تم'));
+        return[
+            'info' => $review,
+        ];
     }
 
 
@@ -30,49 +34,41 @@ class ReviewController extends Controller
             'next_view'=> 'String|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $review_data = [];
+        $review = Review::create([
+            'patient_id' => $request->patient_id,
+            'doctor_id' => $request->doctor_id,
+            'clinic_id' => $request->clinic_id,
+            'service_id' => $request->service_id,
+            'reservation_id' => $request->reservation_id,
+            'notes'=> $request->notes,
+            'next_view'=> $request->next_view,
+        ]);
 
-        if($request->has('patient_id')) if(!is_null($request->patient_id)) $review_data['patient_id'] = $request->patient_id;
-        if($request->has('doctor_id')) if(!is_null($request->doctor_id)) $review_data['doctor_id'] = $request->doctor_id;
-        if($request->has('clinic_id')) if(!is_null($request->clinic_id)) $review_data['clinic_id'] = $request->clinic_id;
-        if($request->has('service_id')) if(!is_null($request->service_id)) $review_data['service_id'] = $request->service_id;
-        if($request->has('reservation_id')) if(!is_null($request->reservation_id)) $review_data['reservation_id'] = $request->reservation_id;
-        if($request->has('notes')) if(!is_null($request->notes)) $review_data['notes'] = $request->notes;
-        if($request->has('date')) if(!is_null($request->date)) $review_data['date'] = $request->date;
-        if($request->has('next_view')) if(!is_null($request->next_view)) $review_data['next_view'] = $request->next_view;
+        return [
 
-
-        try
-        {
-            $review = Review::create($review_data);
-            $review = $review->Review()->create($review_data);
-            return response()->json(new Message($review->load('device'), '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+            'review'=>$review,
+        ];
     }
 
 
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(Review  $review)
+    public function show($id)
     {
-        return response()->json(new Message($review, '200', true, 'info', 'done', 'تم'));
+        $review = Review::get()->where('id',$id);
+        return [
+            'review info' => $review,
+        ];
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, Review  $review)
+    public function update(Request $request, $id)
     {
+        $review = Review::find($id);
         $rules = [
             'patient_id'=> 'integer|required',
             'doctor_id'=> 'integer|required',
@@ -84,34 +80,20 @@ class ReviewController extends Controller
             'next_view'=> 'String|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
+        $this->validate($request ,$rules );
+        $review->patient_id = $request->patient_id;
+        $review->doctor_id = $request->doctor_id;
+        $review->clinic_id = $request->clinic_id;
+        $review->service_id = $request->service_id;
+        $review->reservation_id = $request->reservation_id;
+        $review->notes = $request->notes;
+        $review->next_view = $request->next_view;
+        if($review->save()) {
+            return [
+                'review' => $review,
+            ];
         }
 
-        $review_data = [];
-
-        if($request->has('patient_id')) if(!is_null($request->patient_id)) $review_data['patient_id'] = $request->patient_id;
-        if($request->has('doctor_id')) if(!is_null($request->doctor_id)) $review_data['doctor_id'] = $request->doctor_id;
-        if($request->has('clinic_id')) if(!is_null($request->clinic_id)) $review_data['clinic_id'] = $request->clinic_id;
-        if($request->has('service_id')) if(!is_null($request->service_id)) $review_data['service_id'] = $request->service_id;
-        if($request->has('reservation_id')) if(!is_null($request->reservation_id)) $review_data['reservation_id'] = $request->reservation_id;
-        if($request->has('notes')) if(!is_null($request->notes)) $review_data['notes'] = $request->notes;
-        if($request->has('date')) if(!is_null($request->date)) $review_data['date'] = $request->date;
-        if($request->has('next_view')) if(!is_null($request->next_view)) $review_data['next_view'] = $request->next_view;
-
-        try
-        {
-            $review->update($review_data);
-            $review->update($review_data);
-            return response()->json(new Message($review->load('review'),'200', true, 'info', 'done', 'تم'));
-
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
     }
 
 

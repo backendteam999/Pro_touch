@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
+    protected $fillable = [
+        'patient_id',
+        'doctor_id',
+        'clinic_id',
+        'reception_id',
+        'event_id',
+        'service_id',
+        'Date',
+        'status',
+        'Confirmation',
+        'offset',
+    ];
+
     use HasFactory;
 
     public function patient (){

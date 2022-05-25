@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Reception;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -13,109 +14,121 @@ class PatientController extends Controller
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
-        $reception = Reception::get();
-        return response()->json(new Message($reception, '200', true, 'info', 'done', 'تم'));
+        $patient = Patient::get();
+        return[
+            'info' => $patient,
+        ];
     }
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
-        $rules = [
+        $user_rules = [
             'name'=> 'string|required',
             'email'=> 'integer|required',
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '200', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$user_rules );
 
-        $user_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('email')) if(!is_null($request->age)) $user_data['email'] = $request->email;
-        if($request->has('password')) if(!is_null($request->password)) $user_data['password'] = $request->password;
-        if($request->has('phone_number')) if(!is_null($request->phone_number)) $user_data['phone_number'] = $request->phone_number;
+        $user =User::create([
+            'name'=> $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'phone_number'=> $request->phone_number
+        ]);
 
-        $patient_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('age')) if(!is_null($request->age)) $user_data['age'] = $request->age;
-        if($request->has('gender')) if(!is_null($request->gender)) $user_data['gender'] = $request->gender;
+        $patient_rules =[
+            'name'=> 'string|required',
+            'age'=> 'integer|required',
+            'gender'=> 'string|required',
+            'user_id'=>'integer|required',
+        ];
+        $this->validate($request ,$patient_rules );
 
-        try
-        {
-            $user = User::create($user_data);
-            $patient = $user->doctor()->create($patient_data);
-            return response()->json(new Message($patient, '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e) {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
+        $patient = Patient::create([
+            'name' => $request->name,
+            'age' => $request->age,
+            'gender' => $request->gender,
+            'user_id' => $request->user_id,
+        ]);
 
-        }
+        return [
+
+            'patient'=>$patient,
+        ];
     }
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(Patient  $patient)
+    public function show($id)
     {
-        return response()->json(new Message($patient, '200', true, 'info', 'done', 'تم'));
+        $patient = Patient::get()->where('id',$id);
+        return [
+            'doctor info' => $patient,
+        ];
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, Patient  $patient)
+    public function update(Request $request, $id)
     {
-        $rules = [
+        $user = User::find($id);
+        $user_rules =[
             'name'=> 'string|required',
-            'email'=> 'integer|required',
+            'email'=> 'string|required',
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
+        $this->validate($request ,$user_rules );
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '200', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->phone_number = $request->phone_number;
+        if ($user->save()){
+            return [
+                'result' => "user updated",
+            ];
         }
-        $user_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('email')) if(!is_null($request->age)) $user_data['email'] = $request->email;
-        if($request->has('password')) if(!is_null($request->password)) $user_data['password'] = $request->password;
-        if($request->has('phone_number')) if(!is_null($request->phone_number)) $user_data['phone_number'] = $request->phone_number;
 
-        $patient_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('age')) if(!is_null($request->age)) $user_data['age'] = $request->age;
-        if($request->has('gender')) if(!is_null($request->gender)) $user_data['gender'] = $request->gender;
 
-        try
-        {
-            $user = $patient->users;
-            $user->update($user_data);
-            $patient->update($patient_data);
-            return response()->json(new Message( $patient, '200', true, 'info', 'done', 'تم'));
+        $patient_rules =[
+            'name'=> 'string|required',
+            'age'=> 'integer|required',
+            'gender'=> 'string|required',
+            'user_id'=>'integer|required',
+        ];
+        $this->validate($request ,$patient_rules );
+
+        $patien = Patient::find($id);
+        $patien->name = $request->name;
+        $patien->age = $request->age;
+        $patien->gender = $request->gender;
+        $patien->user_id = $request->user_id;
+        if ($patien->save()){
+            return [
+                'result' => "user updated",
+            ];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(Patient  $patient)
+    public function destroy($id)
     {
-        try
-        {
-            $patient->delete();
-            return response()->json(new Message( $patient,'200', true, 'info', 'done', 'تم'));
+        $patient = Patient::find($id);
+        $result = $patient->delete();
+        if ($result){
+            return ["result" => "the patient has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 
 }

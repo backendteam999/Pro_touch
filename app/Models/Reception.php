@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Reception extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'name',
+        'age',
+        'gender',
+        'skills',
+        'user_id',
+    ];
     public function user(){
         return $this->belongsTo(User::class,'id');
     }

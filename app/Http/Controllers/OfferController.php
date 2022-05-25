@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Doctor;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class OfferController extends Controller
     public function index()
     {
         $offer = Offer::get();
-        return response()->json(new Message($offer, '200', true, 'info', 'done', 'تم'));
+        return[
+            'info' => $offer,
+        ];
     }
 
 
@@ -28,46 +31,40 @@ class OfferController extends Controller
             'information'=> 'text|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $offer_data = [];
+        $offer = Offer::create([
+            'clinic_id' => $request->clinic_id,
+            'service_id' => $request->service_id,
+            'offer_price' => $request->offer_price,
+            'start_date' => $request->start_date,
+            'due_date' => $request->due_date,
+            'information'=> $request->information,
+        ]);
 
-        if($request->has('clinic_id')) if(!is_null($request->clinic_id)) $offer_data['clinic_id'] = $request->clinic_id;
-        if($request->has('service_id')) if(!is_null($request->service_id)) $offer_data['service_id'] = $request->service_id;
-        if($request->has('offer_price')) if(!is_null($request->offer_price)) $offer_data['offer_price'] = $request->offer_price;
-        if($request->has('start_date')) if(!is_null($request->start_date)) $offer_data['start_date'] = $request->start_date;
-        if($request->has('due_date')) if(!is_null($request->due_date)) $offer_data['due_date'] = $request->due_date;
-        if($request->has('information')) if(!is_null($request->information)) $offer_data['information'] = $request->information;
+        return [
 
-        try
-        {
-            $offer = Offer::create($offer_data);
-            $offer = $offer->Offer()->create($offer_data);
-            return response()->json(new Message($offer->load('device'), '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+            'offer'=>$offer,
+        ];
     }
 
 
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(Offer  $offer)
+    public function show($id)
     {
-        return response()->json(new Message($offer, '200', true, 'info', 'done', 'تم'));
+        $offer = Offer::get()->where('id',$id);
+        return [
+            'offer info' => $offer,
+        ];
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, Offer  $offer)
+    public function update(Request $request, $id)
     {
+        $offer = Offer::find($id);
         $rules = [
             'clinic_id'=> 'integer|required',
             'service_id'=> 'integer|required',
@@ -77,46 +74,34 @@ class OfferController extends Controller
             'information'=> 'text|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $offer_data = [];
-
-        if($request->has('clinic_id')) if(!is_null($request->clinic_id)) $offer_data['clinic_id'] = $request->clinic_id;
-        if($request->has('service_id')) if(!is_null($request->service_id)) $offer_data['service_id'] = $request->service_id;
-        if($request->has('offer_price')) if(!is_null($request->offer_price)) $offer_data['offer_price'] = $request->offer_price;
-        if($request->has('start_date')) if(!is_null($request->start_date)) $offer_data['start_date'] = $request->start_date;
-        if($request->has('due_date')) if(!is_null($request->due_date)) $offer_data['due_date'] = $request->due_date;
-        if($request->has('information')) if(!is_null($request->information)) $offer_data['information'] = $request->information;
-
-        try
-        {
-            $offer->update($offer_data);
-            $offer->update($offer_data);
-            return response()->json(new Message($offer->load('offer'),'200', true, 'info', 'done', 'تم'));
-
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
+        $offer->clinic_id = $request->clinic_id;
+        $offer->service_id = $request->service_id;
+        $offer->offer_price = $request->offer_price;
+        $offer->start_date = $request->start_date;
+        $offer->due_date = $request->due_date;
+        $offer->information = $request->information;
+        if ($offer->save()){
+            return [
+                'offer info' => $offer,
+            ];
         }
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(Offer  $offer)
+    public function destroy($id)
     {
-        try
-        {
-            $offer->delete();
-            return response()->json(new Message( $offer,'200', true, 'info', 'done', 'تم'));
+        $offer = Offer::find($id);
+        $result = $offer->delete();
+        if ($result){
+            return ["result" => "the offer has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 }

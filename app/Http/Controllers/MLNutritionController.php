@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use App\Models\ML_Dental_Clinic;
 use App\Models\ML_Nutrition_Clinic;
 use Illuminate\Http\Request;
@@ -12,7 +13,9 @@ class MLNutritionController extends Controller
     public function index()
     {
         $ml_nutrition = ML_Nutrition_Clinic::get();
-        return response()->json(new Message($ml_nutrition, '200', true, 'info', 'done', 'تم'));
+        return[
+            'info' => $ml_nutrition,
+        ];
     }
 
 
@@ -20,7 +23,7 @@ class MLNutritionController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'allergy'=> 'string|required',
+            'food_allergy'=> 'string|required',
             'job'=> 'string|required',
             'length'=> 'integer|required',
             'age'=> 'integer|required',
@@ -29,49 +32,41 @@ class MLNutritionController extends Controller
 
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $ml_nutrition_data = [];
+        $ml_nutrition = ML_Nutrition_Clinic::create([
+            'food_allergy' => $request->food_allergy,
+            'job' => $request->job,
+            'length' => $request->length,
+            'age' => $request->specialization,
+            'sport_schedule' => $request->sport_schedule,
+            'medical_log_id'=> $request->clinic_id,
+        ]);
 
-        if($request->has('allergy')) if(!is_null($request->allergy)) $ml_nutrition_data['allergy'] = $request->allergy;
-        if($request->has('job')) if(!is_null($request->job)) $ml_nutrition_data['job'] = $request->job;
-        if($request->has('length')) if(!is_null($request->length)) $ml_nutrition_data['length'] = $request->length;
-        if($request->has('age')) if(!is_null($request->age)) $ml_nutrition_data['age'] = $request->age;
-        if($request->has('sport_schedule')) if(!is_null($request->sport_schedule)) $ml_nutrition_data['sport_schedule'] = $request->sport_schedule;
-        if($request->has('medical_log_id')) if(!is_null($request->medical_log_id)) $ml_nutrition_data['medical_log_id'] = $request->medical_log_id;
+        return [
 
-
-        try
-        {
-            $ml_nutrition = ML_Nutrition_Clinic::create($ml_nutrition_data);
-            $ml_nutrition = $ml_nutrition->ML_Nutrition_Clinic()->create($ml_nutrition_data);
-            return response()->json(new Message($ml_nutrition->load('ml_nutrition'), '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+            'ml_nutrition'=>$ml_nutrition,
+        ];
     }
 
 
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(ML_Nutrition_Clinic  $ml_nutrition)
+    public function show($id)
     {
-        return response()->json(new Message($ml_nutrition, '200', true, 'info', 'done', 'تم'));
-    }
+        $ml_nutrition = Doctor::get()->where('id',$id);
+        return [
+            'ml nutrition info' => $ml_nutrition,
+        ];    }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, ML_Nutrition_Clinic  $ml_nutrition)
+    public function update(Request $request, $id)
     {
+        $ml_nutrition = ML_Nutrition_Clinic::find($id);
         $rules = [
-            'allergy'=> 'string|required',
+            'food_allergy'=> 'string|required',
             'job'=> 'string|required',
             'length'=> 'integer|required',
             'age'=> 'integer|required',
@@ -79,47 +74,37 @@ class MLNutritionController extends Controller
             'medical_log_id'=> 'integer|required',
 
         ];
+        $this->validate($request ,$rules );
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
+
+        $ml_nutrition->food_allergy = $request->food_allergy;
+        $ml_nutrition->job = $request->job;
+        $ml_nutrition->length = $request->length;
+        $ml_nutrition->age = $request->specialization;
+        $ml_nutrition->sport_schedule = $request->sport_schedule;
+        $ml_nutrition->medical_log_id = $request->clinic_id;
+        if ($ml_nutrition->save()){
+            return [
+
+                'ml_nutrition'=>$ml_nutrition,
+            ];
         }
 
-        $ml_nutrition_data = [];
-
-        if($request->has('allergy')) if(!is_null($request->allergy)) $ml_nutrition_data['allergy'] = $request->allergy;
-        if($request->has('job')) if(!is_null($request->job)) $ml_nutrition_data['job'] = $request->job;
-        if($request->has('length')) if(!is_null($request->length)) $ml_nutrition_data['length'] = $request->length;
-        if($request->has('age')) if(!is_null($request->age)) $ml_nutrition_data['age'] = $request->age;
-        if($request->has('sport_schedule')) if(!is_null($request->sport_schedule)) $ml_nutrition_data['sport_schedule'] = $request->sport_schedule;
-        if($request->has('medical_log_id')) if(!is_null($request->medical_log_id)) $ml_nutrition_data['medical_log_id'] = $request->medical_log_id;
-
-        try
-        {
-            $ml_nutrition->update($ml_nutrition_data);
-            $ml_nutrition->update($ml_nutrition_data);
-            return response()->json(new Message($ml_nutrition->load('ml_nutrition'),'200', true, 'info', 'done', 'تم'));
-
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(ML_Nutrition_Clinic  $ml_nutrition)
+    public function destroy($id)
     {
-        try
-        {
-            $ml_nutrition->delete();
-            return response()->json(new Message( $ml_nutrition,'200', true, 'info', 'done', 'تم'));
+        $ml_nutrition = ML_Nutrition_Clinic::find($id);
+        $result = $ml_nutrition->delete();
+        if ($result){
+            return ["result" => "the ml_nutrition has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 }

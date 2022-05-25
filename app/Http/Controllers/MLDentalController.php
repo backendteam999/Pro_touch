@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use App\Models\Medical_log;
 use App\Models\ML_Dental_Clinic;
 use Illuminate\Http\Request;
@@ -12,7 +13,9 @@ class MLDentalController extends Controller
     public function index()
     {
         $ml_dental = ML_Dental_Clinic::get();
-        return response()->json(new Message($ml_dental, '200', true, 'info', 'done', 'تم'));
+        return[
+            'info' => $ml_dental,
+        ];
     }
 
 
@@ -22,92 +25,72 @@ class MLDentalController extends Controller
         $rules = [
             'smoking'=> 'boolean|required',
             'Oral_Allergic'=> 'string|required',
-            'medical_log_id'=> 'string|required',
+            'medical_log_id'=> 'integer|required',
 
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $ml_dental_data = [];
+        $ml_dental = ML_Dental_Clinic::create([
+            'smoking' => $request->smoking,
+            'Oral_Allergic' => $request->Oral_Allergic,
+            'medical_log_id' => $request->medical_log_id,
+        ]);
 
-        if($request->has('smoking')) if(!is_null($request->smoking)) $ml_dental_data['smoking'] = $request->smoking;
-        if($request->has('Oral_Allergic')) if(!is_null($request->Oral_Allergic)) $ml_dental_data['Oral_Allergic'] = $request->Oral_Allergic;
-        if($request->has('medical_log_id')) if(!is_null($request->medical_log_id)) $ml_dental_data['medical_log_id'] = $request->medical_log_id;
+        return [
 
-
-        try
-        {
-            $ml_dental = ML_Dental_Clinic::create($ml_dental_data);
-            $ml_dental = $ml_dental->ML_Dental_Clinic()->create($ml_dental_data);
-            return response()->json(new Message($ml_dental->load('ml_dental'), '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+            'ml_dental'=>$ml_dental,
+        ];
     }
 
 
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(ML_Dental_Clinic  $ml_dental)
+    public function show($id)
     {
-        return response()->json(new Message($ml_dental, '200', true, 'info', 'done', 'تم'));
+        $ml_dental = ML_Dental_Clinic::get()->where('id',$id);
+        return [
+            'ml dental info' => $ml_dental,
+        ];
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, ML_Dental_Clinic  $ml_dental)
+    public function update(Request $request, $id)
     {
+        $ml_dental = ML_Dental_Clinic::find($id);
         $rules = [
             'smoking'=> 'boolean|required',
             'Oral_Allergic'=> 'string|required',
             'medical_log_id'=> 'string|required',
 
         ];
+        $this->validate($request ,$rules );
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
-
-        $ml_dental_data = [];
-
-        if($request->has('smoking')) if(!is_null($request->smoking)) $ml_dental_data['smoking'] = $request->smoking;
-        if($request->has('Oral_Allergic')) if(!is_null($request->Oral_Allergic)) $ml_dental_data['Oral_Allergic'] = $request->Oral_Allergic;
-        if($request->has('medical_log_id')) if(!is_null($request->medical_log_id)) $ml_dental_data['medical_log_id'] = $request->medical_log_id;
-
-        try
-        {
-            $ml_dental->update($ml_dental_data);
-            $ml_dental->update($ml_dental_data);
-            return response()->json(new Message($ml_dental->load('ml_dental'),'200', true, 'info', 'done', 'تم'));
-
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
+        $ml_dental->smoking = $request->smoking;
+        $ml_dental->Oral_Allergic = $request->Oral_Allergic;
+        $ml_dental->medical_log_id = $request->medical_log_id;
+        if ($ml_dental->save()){
+            return [
+                'ml dental info' => $ml_dental,
+            ];
         }
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(ML_Dental_Clinic  $ml_dental)
+    public function destroy($id)
     {
-        try
-        {
-            $ml_dental->delete();
-            return response()->json(new Message( $ml_dental,'200', true, 'info', 'done', 'تم'));
+        $ml_dental = ML_Dental_Clinic::find($id);
+        $result = $ml_dental->delete();
+        if ($result){
+            return ["result" => "the ml_dental has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 }

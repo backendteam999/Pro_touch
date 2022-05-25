@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Doctor;
 use App\Models\Reception;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,9 @@ class DeviceController extends Controller
     public function index()
     {
         $device = Device::get();
-        return response()->json(new Message($device, '200', true, 'info', 'done', 'تم'));
+        return[
+            'info' => $device,
+        ];
     }
 
 
@@ -25,88 +28,69 @@ class DeviceController extends Controller
             'description'=> 'text|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $device_data = [];
+        $device = Device::create([
+            'service_id' => $request->service_id,
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
 
-        if($request->has('service_id')) if(!is_null($request->service_id)) $device_data['service_id'] = $request->service_id;
-        if($request->has('name')) if(!is_null($request->name)) $device_data['name'] = $request->name;
-        if($request->has('description')) if(!is_null($request->description)) $device_data['description'] = $request->description;
+        return [
 
-
-        try
-        {
-            $device = Device::create($device_data);
-            $device = $device->Device()->create($device_data);
-            return response()->json(new Message($device->load('device'), '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+            'device'=>$device,
+        ];
     }
 
 
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(Device  $device)
+    public function show($id)
     {
-        return response()->json(new Message($device, '200', true, 'info', 'done', 'تم'));
-    }
+        $device = Device::get()->where('id',$id);
+        return [
+            'device info' => $device,
+        ];    }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, Device  $device)
+    public function update(Request $request, $id)
     {
+        $device = Device::find($id);
         $rules = [
             'service_id'=> 'integer|required',
             'name'=> 'string|required',
             'description'=> 'text|required',
         ];
+        $this->validate($request ,$rules );
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $device->service_id = $request->service_id;
+        $device->name = $request->name;
+        $device->description = $request->description;
 
-        $device_data = [];
+        if($device->seve()){
+            return [
 
-        if($request->has('service_id')) if(!is_null($request->service_id)) $device_data['service_id'] = $request->service_id;
-        if($request->has('name')) if(!is_null($request->name)) $device_data['name'] = $request->name;
-        if($request->has('description')) if(!is_null($request->description)) $device_data['description'] = $request->description;
-
-        try
-        {
-            $device->update($device_data);
-            $device->update($device_data);
-            return response()->json(new Message($device->load('device'),'200', true, 'info', 'done', 'تم'));
-
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
+                'device'=>$device,
+            ];
         }
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(Device  $device)
+    public function destroy($id)
     {
-        try
-        {
-            $device->delete();
-            return response()->json(new Message( $device,'200', true, 'info', 'done', 'تم'));
+        $device = Device::find($id);
+        $result = $device->delete();
+        if ($result){
+            return ["result" => "the device has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\Reception;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ReceptionController extends Controller
@@ -15,7 +17,9 @@ class ReceptionController extends Controller
     public function index()
     {
         $reception = Reception::get();
-        return response()->json(new Message($reception, '200', true, 'info', 'done', 'تم'));
+        return[
+            'info' => $reception,
+        ];
     }
 
 
@@ -23,104 +27,114 @@ class ReceptionController extends Controller
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
-        $rules = [
+        $user_rules = [
             'name'=> 'string|required',
             'email'=> 'integer|required',
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '200', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$user_rules );
 
-        $user_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('email')) if(!is_null($request->age)) $user_data['email'] = $request->email;
-        if($request->has('password')) if(!is_null($request->password)) $user_data['password'] = $request->password;
-        if($request->has('phone_number')) if(!is_null($request->phone_number)) $user_data['phone_number'] = $request->phone_number;
+        $user =User::create([
+            'name'=> $request->name,
+            'email' => $request->email,
+            'password' => $request->password,
+            'phone_number'=> $request->phone_number
+        ]);
 
-        $reception_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('age')) if(!is_null($request->age)) $user_data['age'] = $request->age;
-        if($request->has('gender')) if(!is_null($request->gender)) $user_data['gender'] = $request->gender;
-        if($request->has('skills')) if(!is_null($request->skills)) $user_data['skills'] = $request->skills;
+        $reception_rules =[
+            'name'=> 'string|required',
+            'age'=> 'integer|required',
+            'gender'=> 'string|required',
+            'skills'=> 'string|required',
+            'user_id'=>'integer|required',
+        ];
+        $this->validate($request ,$reception_rules );
 
-        try
-        {
-            $user = User::create($user_data);
-            $reception = $user->reception()->create($reception_data);
-            return response()->json(new Message($reception, '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e) {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
+        $reception = Reception::create([
+            'name' => $request->name,
+            'age' => $request->age,
+            'gender' => $request->gender,
+            'skills' => $request->skills,
+            'user_id' => $request->user_id,
+        ]);
+        return [
 
-        }
+            'reception'=>$reception,
+        ];
     }
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(Reception  $reception)
+    public function show($id)
     {
-        return response()->json(new Message($reception, '200', true, 'info', 'done', 'تم'));
+        $reception = Doctor::get()->where('id',$id);
+        return [
+            'reception info' => $reception,
+        ];
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, Reception  $reception)
+    public function update(Request $request, $id)
     {
-        $rules = [
+        $user = User::find($id);
+        $user_rules =[
             'name'=> 'string|required',
-            'email'=> 'integer|required',
+            'email'=> 'string|required',
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
+        $this->validate($request ,$user_rules );
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '200', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->phone_number = $request->phone_number;
+        if ($user->save()){
+            return [
+                'result' => "user updated",
+            ];
         }
-        $user_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('email')) if(!is_null($request->age)) $user_data['email'] = $request->email;
-        if($request->has('password')) if(!is_null($request->password)) $user_data['password'] = $request->password;
-        if($request->has('phone_number')) if(!is_null($request->phone_number)) $user_data['phone_number'] = $request->phone_number;
 
-        $reception_data = [];
-        if($request->has('name')) if(!is_null($request->name)) $user_data['name'] = $request->name;
-        if($request->has('age')) if(!is_null($request->age)) $user_data['age'] = $request->age;
-        if($request->has('gender')) if(!is_null($request->gender)) $user_data['gender'] = $request->gender;
-        if($request->has('skills')) if(!is_null($request->skills)) $user_data['skills'] = $request->skills;
 
-        try
-        {
-            $user = $reception->users;
-            $user->update($user_data);
-            $reception->update($reception_data);
-            return response()->json(new Message( $reception, '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
+        $reception = Reception::find($id);
+        $reception_rules =[
+            'name'=> 'string|required',
+            'age'=> 'integer|required',
+            'gender'=> 'string|required',
+            'skills'=> 'string|required',
+            'user_id'=>'integer|required',
+        ];
+        $this->validate($request ,$reception_rules );
+
+        $reception->name = $request->name;
+        $reception->age = $request->age;
+        $reception->gender = $request->gender;
+        $reception->skills = $request->skills;
+        $reception->user_id = $request->user_id;
+        if ($reception->save()){
+            return [
+                'reception' => $reception,
+            ];
         }
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(Reception  $reception)
+    public function destroy($id)
     {
-        try
-        {
-            $reception->delete();
-            return response()->json(new Message( $reception,'200', true, 'info', 'done', 'تم'));
+        $reception = Reception::find($id);
+        $result = $reception->delete();
+        if ($result){
+            return ["result" => "the reception has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 
 

@@ -9,6 +9,7 @@ class Device extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'service_id',
         'name',
         'description'];
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Device;
+use App\Models\Doctor;
 use App\Models\Service;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ServicesController extends Controller
@@ -11,8 +13,10 @@ class ServicesController extends Controller
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
-        $services = Device::get();
-        return response()->json(new Message($services, '200', true, 'info', 'done', 'تم'));
+        $service = Service::get();
+        return[
+            'info' => $service,
+        ];
     }
 
 
@@ -25,88 +29,64 @@ class ServicesController extends Controller
             'description'=> 'text|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $services_data = [];
+        $service = Service::create([
+            'clinic_id' => $request->clinic_id,
+            'price' => $request->price,
+            'description' => $request->description,
+        ]);
 
-        if($request->has('clinic_id')) if(!is_null($request->clinic_id)) $services_data['clinic_id'] = $request->clinic_id;
-        if($request->has('price')) if(!is_null($request->price)) $services_data['price'] = $request->price;
-        if($request->has('description')) if(!is_null($request->description)) $services_data['description'] = $request->description;
+        return [
 
-
-        try
-        {
-            $services = Service::create($services_data);
-            $services = $services->Service()->create($services_data);
-            return response()->json(new Message($services->load('services'), '200', true, 'info', 'done', 'تم'));
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
+            'service'=>$service,
+        ];
     }
 
 
 
 
     /////////////////////////////////// Show //////////////////////////////////
-    public function show(Service  $service)
+    public function show($id)
     {
-        return response()->json(new Message($service, '200', true, 'info', 'done', 'تم'));
-    }
+        $service = Service::get()->where('id',$id);
+        return [
+            'service info' => $service,
+        ];    }
 
 
     /////////////////////////////////// Update //////////////////////////////////
-    public function update(Request $request, Service  $services)
+    public function update(Request $request, $id)
     {
+        $service = User::find($id);
         $rules = [
             'clinic_id'=> 'integer|required',
             'price'=> 'double|required',
             'description'=> 'text|required',
         ];
 
-        $validated = Validator::make($request->all(),  $rules);
-        if($validated->fails())
-        {
-            return response()->json(new Message($validated->errors(), '500', false, 'error', 'validation error', 'تحقق من المعلومات المدخلة'));
-        }
+        $this->validate($request ,$rules );
 
-        $services_data = [];
+        $service->clinic_id = $request->clinic_id;
+        $service->price = $request->price;
+        $service->description = $request->description;
 
-        if($request->has('clinic_id')) if(!is_null($request->clinic_id)) $device_data['clinic_id'] = $request->clinic_id;
-        if($request->has('price')) if(!is_null($request->price)) $device_data['price'] = $request->price;
-        if($request->has('description')) if(!is_null($request->description)) $device_data['description'] = $request->description;
-
-        try
-        {
-            $services->update($services_data);
-            $services->update($services_data);
-            return response()->json(new Message($services->load('services'),'200', true, 'info', 'done', 'تم'));
-
-        }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(), '100', false, 'error', 'error', 'خطأ'));
-        }
     }
 
 
     /////////////////////////////////// Destroy //////////////////////////////////
-    public function destroy(Service  $services)
+    public function destroy($id)
     {
-        try
-        {
-            $services->delete();
-            return response()->json(new Message( $services,'200', true, 'info', 'done', 'تم'));
+        $service = Service::find($id);
+        $result = $service->delete();
+        if ($result){
+            return ["result" => "the service has deleted"];
         }
-        catch(\Exception $e)
-        {
-            return response()->json(new Message($e->getMessage(),'100', false, 'error', 'error', 'خطأ'));
+        else{
+            return ["result" => "operation failed"];
         }
+
+
     }
 
 }

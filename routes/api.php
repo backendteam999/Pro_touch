@@ -21,103 +21,103 @@ Route::middleware('auth:sanctum')->get('/ujhgjhgjhgjhgjhgser', function (Request
 
 /////////////////////////////////// Admin //////////////////////////////////
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('admin', 'AdminController@index');
+    Route::get('/admin', 'AdminController@index');
 });
 
 
 /////////////////////////////////// Doctor //////////////////////////////////
-Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/doctor', 'DoctorController@index');
-    Route::post('/doctor', 'DoctorController@store');
-    Route::get('/doctor/{id}', 'DocorController@show');
-    Route::put('/doctor/{id}', 'DoctorController@update');
-    Route::delete('/doctor/{id}', 'DoctorController@delete');
-});
+//Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/doctor','DoctorController@index');
+    Route::post('/doctor/store', 'DoctorController@store');
+    Route::get('/doctor/show/{id}', 'DoctorController@show');
+    Route::put('/doctor/update/{id}', 'DoctorController@update');
+    Route::delete('/doctor/delete/{id}', 'DoctorController@destroy');
+//});
 
 
 /////////////////////////////////// Reception //////////////////////////////////
-Route::group(['middleware' => 'auth:api'], function() {
+//Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/reception', 'ReceptionController@index');
-    Route::post('/reception', 'ReceptionController@store');
-    Route::get('/reception/{id}', 'ReceptionController@show');
-    Route::put('/reception/{id}', 'ReceptionController@update');
-    Route::delete('/reception/{id}', 'ReceptionController@delete');
-});
+    Route::post('/reception/store', 'ReceptionController@store');
+    Route::get('/reception/show/{id}', 'ReceptionController@show');
+    Route::put('/reception/update/{id}', 'ReceptionController@update');
+    Route::delete('/reception/delete/{id}', 'ReceptionController@delete');
+//});
 
 
 /////////////////////////////////// Patient //////////////////////////////////
-Route::group(['middleware' => 'auth:api'], function() {
+//Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/patient', 'PatientController@index');
-    Route::post('/patient', 'PatientController@store');
-    Route::get('/patient/{id}', 'PatientController@show');
-    Route::put('/patient/{id}', 'PatientController@update');
-    Route::delete('/patient/{id}', 'PatientController@delete');
-});
+    Route::post('/patient/store', 'PatientController@store');
+    Route::get('/patient/show/{id}', 'PatientController@show');
+    Route::put('/patient/update/{id}', 'PatientController@update');
+    Route::delete('/patient/delete/{id}', 'PatientController@delete');
+//});
 
 
 /////////////////////////////////// Clinic //////////////////////////////////
 Route::get('/clinic', 'ClinicController@index');
-Route::get('/clinic/{id}', 'ClinicController@show');
-Route::put('/clinic/{id}', 'ClinicController@update');
+Route::get('/clinic/show/{id}', 'ClinicController@show');
+Route::put('/clinic/update/{id}', 'ClinicController@update');
 
 
 /////////////////////////////////// Medical Log //////////////////////////////////
 Route::get('/medical_log', 'MedicalLogController@index');
-Route::post('/medical_log', 'MedicalLogController@store');
-Route::get('/medical_log/{id}', 'MedicalLogController@show');
-Route::put('/medical_log/{id}', 'MedicalLogController@update');
-Route::delete('/medical_log/{id}', 'MedicalLogController@delete');
+Route::post('/medical_log/store', 'MedicalLogController@store');
+Route::get('/medical_log/show/{id}', 'MedicalLogController@show');
+Route::put('/medical_log/update/{id}', 'MedicalLogController@update');
+Route::delete('/medical_log/delete/{id}', 'MedicalLogController@delete');
 
 
 /////////////////////////////////// ML Dental //////////////////////////////////
 Route::get('/ml_dental', 'MLDentalController@index');
-Route::post('/ml_dental', 'MLDentalController@store');
-Route::get('/ml_dental/{id}', 'MLDentalController@show');
-Route::put('/ml_dental/{id}', 'MLDentalController@update');
-Route::delete('/ml_dental/{id}', 'MLDentalController@delete');
+Route::post('/ml_dental/store', 'MLDentalController@store');
+Route::get('/ml_dental/show/{id}', 'MLDentalController@show');
+Route::put('/ml_dental/update/{id}', 'MLDentalController@update');
+Route::delete('/ml_dental/delete/{id}', 'MLDentalController@delete');
 
 
 /////////////////////////////////// ML Nutrition //////////////////////////////////
 Route::get('/ml_nutrition', 'MLNutritionController@index');
-Route::post('/ml_nutrition', 'MLNutritionController@store');
-Route::get('/ml_nutrition/{id}', 'MLNutritionController@show');
-Route::put('/ml_nutrition/{id}', 'MLNutritionController@update');
-Route::delete('/ml_nutrition/{id}', 'MLNutritionController@delete');
+Route::post('/ml_nutrition/store', 'MLNutritionController@store');
+Route::get('/ml_nutrition/show/{id}', 'MLNutritionController@show');
+Route::put('/ml_nutrition/update/{id}', 'MLNutritionController@update');
+Route::delete('/ml_nutrition/delete/{id}', 'MLNutritionController@delete');
 
 
 /////////////////////////////////// ML Dermatology & Leaser //////////////////////////////////
 Route::get('/ml_dermatology_leaser', 'MLDermatologyLeaserController@index');
-Route::post('/ml_dermatology_leaser', 'MLDermatologyLeaserController@store');
-Route::get('/ml_dermatology_leaser/{id}', 'MLDermatologyLeaserController@show');
-Route::put('/ml_dermatology_leaser/{id}', 'MLDermatologyLeaserController@update');
-Route::delete('/ml_dermatology_leaser/{id}', 'MLDermatologyLeaserController@delete');
+Route::post('/ml_dermatology_leaser/store', 'MLDermatologyLeaserController@store');
+Route::get('/ml_dermatology_leaser/show/{id}', 'MLDermatologyLeaserController@show');
+Route::put('/ml_dermatology_leaser/update/{id}', 'MLDermatologyLeaserController@update');
+Route::delete('/ml_dermatology_leaser/delete/{id}', 'MLDermatologyLeaserController@delete');
 
 
 /////////////////////////////////// Offers //////////////////////////////////
 Route::get('/offers', 'OfferController@index');
-Route::post('/offers', 'OfferController@store');
-Route::get('/offers/{id}', 'OfferController@show');
-Route::put('/offers/{id}', 'OfferController@update');
-Route::delete('/offers/{id}', 'OfferController@delete');
+Route::post('/offers/store', 'OfferController@store');
+Route::get('/offers/show/{id}', 'OfferController@show');
+Route::put('/offers/update/{id}', 'OfferController@update');
+Route::delete('/offers/delete/{id}', 'OfferController@delete');
 
 
 /////////////////////////////////// Device //////////////////////////////////
 Route::get('/device', 'DeviceController@index');
-Route::post('/device', 'DeviceController@store');
-Route::get('/device/{id}', 'DeviceController@show');
-Route::put('/device/{id}', 'DeviceController@update');
-Route::delete('/device/{id}', 'DeviceController@delete');
+Route::post('/device/store', 'DeviceController@store');
+Route::get('/device/show/{id}', 'DeviceController@show');
+Route::put('/device/update/{id}', 'DeviceController@update');
+Route::delete('/device/delete/{id}', 'DeviceController@delete');
 
 
 /////////////////////////////////// Review //////////////////////////////////
 Route::get('/review', 'ReviewController@index');
-Route::post('/review', 'ReviewController@store');
-Route::get('/review/{id}', 'ReviewController@show');
-Route::put('/review/{id}', 'ReviewController@update');
+Route::post('/review/store', 'ReviewController@store');
+Route::get('/review/show/{id}', 'ReviewController@show');
+Route::put('/review/update/{id}', 'ReviewController@update');
 
 
 /////////////////////////////////// Reservation //////////////////////////////////
 Route::get('/reservation', 'ReservationController@index');
-Route::post('/reservation', 'ReservationController@store');
-Route::get('/reservation/{id}', 'ReservationController@show');
-Route::delete('/reservation/{id}', 'ReservationController@delete');
+Route::post('/reservation/store', 'ReservationController@store');
+Route::get('/reservation/show/{id}', 'ReservationController@show');
+Route::delete('/reservation/delete/{id}', 'ReservationController@delete');
