@@ -140,6 +140,11 @@ class RouteServiceProvider extends ServiceProvider
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/review.php'));
+              ///////////////////////////////////////////
+              Route::prefix('admin')
+                // ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/admin.php'));
 
 
             ///////////////////////////////////////////
@@ -208,6 +213,10 @@ class RouteServiceProvider extends ServiceProvider
         });
         ///////////////////////////////////////////////////////////////////////////////////////////
         RateLimiter::for('review', function (Request $request) {
+            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+        });
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        RateLimiter::for('admin', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
 
