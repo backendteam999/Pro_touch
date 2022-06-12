@@ -14,14 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/', function (Request $request) {
-    return $request->user();
-});
-
-
-/////////////////////////////////// Admin //////////////////////////////////
-Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/admin', 'AdminController@index');
-});
-
-
+/////////////////////////////////// Reservation //////////////////////////////////
+Route::get('/', 'ReservationController@index');
+Route::post('/store', 'ReservationController@store');
+Route::get('/show/{id}', 'ReservationController@show');
+Route::delete('/delete/{id}', 'ReservationController@delete');

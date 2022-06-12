@@ -20,7 +20,7 @@ class CreateMLDematologyAndLeasersTable extends Migration
             $table->string('skin_allergies');
             $table->String('job');
             $table->unsignedInteger('medical_log_id');
-            $table->foreign('medical_log_id')->references('id')->on('medical_log');
+            $table->foreign('medical_log_id')->references('id')->on('medical_logs');
             $table->timestamps();
         });
     }

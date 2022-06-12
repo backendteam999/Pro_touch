@@ -21,7 +21,7 @@ class CreateMLNutritionClinicsTable extends Migration
             $table->integer('age');
             $table->text('sport_schedule');
             $table->unsignedInteger('medical_log_id');
-            $table->foreign('medical_log_id')->references('id')->on('medical_log');
+            $table->foreign('medical_log_id')->references('id')->on('medical_logs');
 
             $table->timestamps();
         });

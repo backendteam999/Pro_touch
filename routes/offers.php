@@ -14,14 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/', function (Request $request) {
-    return $request->user();
-});
 
-
-/////////////////////////////////// Admin //////////////////////////////////
-Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/admin', 'AdminController@index');
-});
-
+/////////////////////////////////// Offers //////////////////////////////////
+Route::get('/', 'OfferController@index');
+Route::post('/store', 'OfferController@store');
+Route::get('/show/{id}', 'OfferController@show');
+Route::put('/update/{id}', 'OfferController@update');
+Route::delete('/delete/{id}', 'OfferController@delete');
 
