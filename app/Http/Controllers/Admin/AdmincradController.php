@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Doctor;
 use App\Models\Reception;
@@ -9,7 +10,7 @@ use App\Models\User;
 use App\Type;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class AdmincradController extends Controller
 {
     /////////////////////////////////// Index //////////////////////////////////
     public function index()

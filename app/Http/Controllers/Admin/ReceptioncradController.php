@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -9,8 +10,9 @@ use App\Models\Reception;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class ReceptionController extends Controller
+class ReceptioncradController extends Controller
 {
+
 
 
     /////////////////////////////////// Index //////////////////////////////////
@@ -136,6 +138,5 @@ class ReceptionController extends Controller
 
 
     }
-
 
 }

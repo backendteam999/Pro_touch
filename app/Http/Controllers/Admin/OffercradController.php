@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Offer;
 use Illuminate\Http\Request;
 
-class OfferController extends Controller
+class OffercradController extends Controller
 {
+    //
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Clinic;
 use App\Models\Device;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
 
-class ClinicController extends Controller
+class CliniccradController extends Controller
 {
-    /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
         $clinic = Clinic::get();
@@ -47,7 +47,5 @@ class ClinicController extends Controller
             ];
         }
     }
-
-
 
 }

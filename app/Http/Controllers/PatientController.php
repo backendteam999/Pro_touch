@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Reception;
@@ -132,3 +133,4 @@ class PatientController extends Controller
     }
 
 }
+

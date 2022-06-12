@@ -18,12 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-/////////////////////////////////// Patient //////////////////////////////////
-//Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/', 'PatientController@index');
-    Route::post('/store', 'PatientController@store');
-    Route::get('/show/{id}', 'PatientController@show');
-    Route::put('/update/{id}', 'PatientController@update');
-    Route::delete('/delete/{id}', 'PatientController@delete');
-//});
+
+
 

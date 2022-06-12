@@ -63,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
             ///////////////////////////////////////////
 
             Route::prefix('doctor')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/doctor.php'));
 
@@ -115,14 +115,14 @@ class RouteServiceProvider extends ServiceProvider
             ///////////////////////////////////////////
 
             Route::prefix('patient')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/patient.php'));
 
 
             ///////////////////////////////////////////
             Route::prefix('reception')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/reception.php'));
 
@@ -142,7 +142,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/review.php'));
               ///////////////////////////////////////////
               Route::prefix('admin')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/admin.php'));
 

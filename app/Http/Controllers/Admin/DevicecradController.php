@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Reception;
 use Illuminate\Http\Request;
 
-class DeviceController extends Controller
+class DevicecradController extends Controller
 {
     /////////////////////////////////// Index //////////////////////////////////
     public function index()

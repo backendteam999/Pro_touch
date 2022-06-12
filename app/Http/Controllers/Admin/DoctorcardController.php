@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\DoctorResouce;
 use App\Models\Device;
@@ -12,7 +12,7 @@ use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
-class DoctorController extends Controller
+class DoctorcardController extends Controller
 {
 
     /////////////////////////////////// Index //////////////////////////////////
@@ -76,7 +76,7 @@ class DoctorController extends Controller
     {
         $doctor = Doctor::get()->where('id',$id);
         return [
-          'doctor info' => $doctor,
+            'doctor info' => $doctor,
         ];
 
     }
@@ -145,6 +145,5 @@ class DoctorController extends Controller
 
 
     }
-
 
 }
