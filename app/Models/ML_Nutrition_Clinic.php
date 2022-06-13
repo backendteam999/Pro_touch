@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ML_Nutrition_Clinic extends Model
 {
     use HasFactory;
-
+    protected $table = 'm_l__nutrition__clinics';
     protected $fillable = [
-        'food_allergy','job','length','age','sport_schedule','medical_log_id',
+        'id','food_allergy','job','length','age','sport_schedule','medical_log_id',
     ];
 
     public function Medical_log(){

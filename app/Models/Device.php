@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Device extends Model
 {
     use HasFactory;
+    protected $table = 'devices';
     protected $fillable = [
-        'service_id',
-        'name',
-        'description'];
+        'id','service_id','name','description','created_at','updated_at'];
+    protected $hidden =[
 
-    public function services(){
-        return $this->belongsTo(Service::class,'id');
+    ];
+
+    public function service(){
+        return $this->belongsTo(Service::class,'service_id');
     }
 }

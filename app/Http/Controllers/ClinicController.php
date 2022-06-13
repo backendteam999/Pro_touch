@@ -13,9 +13,10 @@ class ClinicController extends Controller
     public function index()
     {
         $clinic = Clinic::get();
-        return[
-            'info' => $clinic,
-        ];
+        return response()->json($clinic);
+        //[
+          //  'info' => $clinic,
+        //];
     }
 
 

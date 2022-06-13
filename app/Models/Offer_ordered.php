@@ -17,4 +17,7 @@ class Offer_ordered extends Model
     protected $hidden =[
 
     ];
+    public function offer(){
+        return $this->belongsTo(Offer::class,'offer_id');
+    }
 }

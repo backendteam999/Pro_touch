@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Reception extends Model
 {
     use HasFactory;
+    protected $table = 'receptions';
     protected $fillable = [
+        'id',
         'name',
         'age',
         'gender',
@@ -16,10 +18,10 @@ class Reception extends Model
         'user_id',
     ];
     public function user(){
-        return $this->belongsTo(User::class,'id');
+        return $this->belongsTo(User::class,'user_id');
     }
 
     public function reservation(){
-        return $this->hasMany(Reservation::class,'id','id');
+        return $this->hasMany(Reservation::class,'reception_id','id');
     }
 }

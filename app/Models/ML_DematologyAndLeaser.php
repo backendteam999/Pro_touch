@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ML_DematologyAndLeaser extends Model
 {
     use HasFactory;
+    protected $table = 'm_l__dematology_and_leasers';
     protected $fillable =[
-        'skin_type' , 'skin_colour' ,'skin_allergies' , 'job' , 'medical_log_id',
+       'id','skin_type','skin_colour','skin_allergies' , 'job' , 'medical_log_id',
     ];
 
     public function Medical_log(){
