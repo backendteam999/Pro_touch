@@ -1,7 +1,9 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,14 +17,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
+Route::post('doctor/login',[LoginController::class, 'userLogin'])->name('userLogin');
+Route::group( ['middleware' => ['auth:user-api','scopes:user'] ],function(){
+    // authenticated staff routes here
+    Route::get('dashboard',[LoginController::class, 'userDashboard']);
+    /////////////////////////////////// Patient //////////////////////////////////
+    Route::group( ['prefix' => 'patient','namespace' => 'Patient'],function(){
+        Route::get('/', 'PatientController@index');
+        Route::post('/store', 'PatientController@store');
+        Route::get('/show/{id}', 'PatientController@show');
+        Route::put('/update/{id}', 'PatientController@update');
+        Route::delete('/delete/{id}', 'PatientController@delete');
+    });
+});
 /////////////////////////////////// Doctor //////////////////////////////////
 //Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/','DoctorController@index');
-    Route::post('/store', 'DoctorController@store');
-    Route::get('/show/{id}', 'DoctorController@show');
-    Route::put('/update/{id}', 'DoctorController@update');
-    Route::delete('/delete/{id}', 'DoctorController@destroy');
+
 //});
 
 

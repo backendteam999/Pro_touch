@@ -14,12 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 /////////////////////////////////// Reception //////////////////////////////////
-//Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/', 'ReceptionController@index');
-    Route::post('/store', 'ReceptionController@store');
-    Route::get('/show/{id}', 'ReceptionController@show');
-    Route::put('/update/{id}', 'ReceptionController@update');
-    Route::delete('/delete/{id}', 'ReceptionController@delete');
+
 //});
 
 

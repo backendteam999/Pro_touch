@@ -14,10 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/////////////////////////////////// Device //////////////////////////////////
-Route::get('/', 'DeviceController@index');
-Route::post('/store', 'DeviceController@store');
-Route::get('/show/{id}', 'DeviceController@show');
-Route::put('/update/{id}', 'DeviceController@update');
-Route::delete('/delete/{id}', 'DeviceController@delete');
+
 

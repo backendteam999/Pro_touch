@@ -5,23 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Medical_log;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class MedicalLogController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
         $medical_log = Medical_log::get();
-        return[
-            'info' => $medical_log,
-        ];
+        if($medical_log) {
+            return $this->returnData("medical_log", $medical_log, "this is all medical_logs");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $rules = [
             'patient_id'=> 'integer|required',
             'weight'=> 'double|required',
@@ -34,8 +38,11 @@ class MedicalLogController extends Controller
             'notes'=> 'text|required',
         ];
 
-        $this->validate($request ,$rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $medical_log = Medical_log::create([
             'patient_id' => $request->patient_id,
             'weight' => $request->weight,
@@ -47,11 +54,8 @@ class MedicalLogController extends Controller
             'medicine'=> $request->medicine,
             'notes'=> $request->notes,
         ]);
+        return $this->returnData("medical_log",$medical_log,"medical_log added successfully");
 
-        return [
-
-            'medical_log'=>$medical_log,
-        ];
     }
 
 
@@ -61,15 +65,17 @@ class MedicalLogController extends Controller
     public function show($id)
     {
         $medical_log = Medical_log::get()->where('id',$id);
-        return [
-            'medical log info' => $medical_log,
-        ];
+        if($medical_log) {
+            return $this->returnData("medical_log", $medical_log, "this is the medical_log that you want");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $medical_log = Medical_log::find($id);
         $rules = [
             'patient_id'=> 'integer|required',
@@ -82,8 +88,11 @@ class MedicalLogController extends Controller
             'medicine'=> 'string|required',
             'notes'=> 'text|required',
         ];
-        $this->validate($request ,$rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $medical_log->patient_id = $request->patient_id;
         $medical_log->weight = $request->weight;
         $medical_log->Allergic = $request->Allergic;
@@ -93,12 +102,12 @@ class MedicalLogController extends Controller
         $medical_log->surgery = $request->surgery;
         $medical_log->medicine = $request->medicine;
         $medical_log->notes = $request->notes;
-       if($medical_log->save()){
-           return [
+        if($medical_log->save()){
+            return $this->returnData("medical_log",$medical_log,"medical_log updated successfully");
 
-               'medical_log'=>$medical_log,
-           ];
-       }
+        }
+        else
+            return $this->returnError("999","something goes rung");
 
     }
 
@@ -109,10 +118,11 @@ class MedicalLogController extends Controller
         $medical_log = Medical_log::find($id);
         $result = $medical_log->delete();
         if ($result){
-            return ["result" => "the medical log has deleted"];
+            return $this->returnSuccessMessage("medical_log deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 

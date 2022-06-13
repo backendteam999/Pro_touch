@@ -15,10 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-/////////////////////////////////// Offers //////////////////////////////////
-Route::get('/', 'OfferController@index');
-Route::post('/store', 'OfferController@store');
-Route::get('/show/{id}', 'OfferController@show');
-Route::put('/update/{id}', 'OfferController@update');
-Route::delete('/delete/{id}', 'OfferController@delete');
+
 

@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 
 
-/////////////////////////////////// Clinic //////////////////////////////////
-Route::get('/', 'ClinicController@index');
-Route::get('/show/{id}', 'ClinicController@show');
-Route::put('/update/{id}', 'ClinicController@update');
+
+
 

@@ -63,7 +63,7 @@ class RouteServiceProvider extends ServiceProvider
             ///////////////////////////////////////////
 
             Route::prefix('doctor')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/doctor.php'));
 
@@ -115,14 +115,14 @@ class RouteServiceProvider extends ServiceProvider
             ///////////////////////////////////////////
 
             Route::prefix('patient')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/patient.php'));
 
 
             ///////////////////////////////////////////
             Route::prefix('reception')
-                // ->middleware('api')
+                 ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/reception.php'));
 
@@ -140,6 +140,11 @@ class RouteServiceProvider extends ServiceProvider
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/review.php'));
+              ///////////////////////////////////////////
+              Route::prefix('admin')
+                 ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/admin.php'));
 
 
             ///////////////////////////////////////////
@@ -208,6 +213,10 @@ class RouteServiceProvider extends ServiceProvider
         });
         ///////////////////////////////////////////////////////////////////////////////////////////
         RateLimiter::for('review', function (Request $request) {
+            return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
+        });
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        RateLimiter::for('admin', function (Request $request) {
             return Limit::perMinute(60)->by(optional($request->user())->id ?: $request->ip());
         });
 

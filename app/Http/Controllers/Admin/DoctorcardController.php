@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Resources\DoctorResouce;
 use App\Models\Device;
 use App\Models\Doctor;
+use App\Traits\GeneralTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,29 +13,37 @@ use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
-class DoctorController extends Controller
+class DoctorcardController extends Controller
 {
+    use GeneralTrait;
 
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
         $doctor = Doctor::get();
-        return[
-            'info' => $doctor,
-        ];
+        if($doctor) {
+            return $this->returnData("doctor", $doctor, "this is all doctors");
+        }
+        return $this->returnError("999","something goes rung");
+
     }
 
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $user_rules =[
             'name'=> 'string|required',
             'email'=> 'string|required',
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
-        $this->validate($request ,$user_rules );
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$user_rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
 
         $user =User::create([
             'name'=> $request->name,
@@ -53,8 +62,11 @@ class DoctorController extends Controller
             'user_id'=>'integer|required',
             'clinic_id'=>'integer|required',
         ];
-        $this->validate($request ,$doctor_rules );
-
+        $doctor_validator= \Illuminate\Support\Facades\Validator::make($input ,$doctor_rules );
+        if ($doctor_validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($doctor_validator);
+            return $this->returnValidationError($code, $doctor_validator);
+        }
         $doctor = Doctor::create([
             'name' => $request->name,
             'age' => $request->age,
@@ -64,10 +76,8 @@ class DoctorController extends Controller
             'clinic_id'=> $request->clinic_id,
         ]);
 
-        return [
+        return $this->returnData("doctor",$doctor,"doctor added successfully");
 
-            'doctor'=>$doctor,
-        ];
     }
 
 
@@ -75,9 +85,10 @@ class DoctorController extends Controller
     public function show($id)
     {
         $doctor = Doctor::get()->where('id',$id);
-        return [
-          'doctor info' => $doctor,
-        ];
+        if($doctor) {
+            return $this->returnData("doctor", $doctor, "this is the device that you want");
+        }
+        return $this->returnError("999","something goes rung");
 
     }
 
@@ -86,6 +97,7 @@ class DoctorController extends Controller
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $user = User::find($id);
         $user_rules =[
             'name'=> 'string|required',
@@ -93,16 +105,18 @@ class DoctorController extends Controller
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
-        $this->validate($request ,$user_rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$user_rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
         $user->phone_number = $request->phone_number;
         if ($user->save()){
-            return [
-                'result' => "user updated",
-            ];
+            return $this->returnData("user",$user,"user updated successfully");
+
         }
 
 
@@ -115,7 +129,11 @@ class DoctorController extends Controller
             'user_id'=>'integer|required',
             'clinic_id'=>'integer|required',
         ];
-        $this->validate($request ,$doctor_rules );
+        $doctor_validator= \Illuminate\Support\Facades\Validator::make($input ,$doctor_rules );
+        if ($doctor_validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($doctor_validator);
+            return $this->returnValidationError($code, $doctor_validator);
+        }
 
         $doctor->name = $request->name;
         $doctor->age = $request->age;
@@ -123,11 +141,12 @@ class DoctorController extends Controller
         $doctor->specialization = $request->specialization;
         $doctor->user_id = $request->user_id;
         $doctor->clinic_id = $request->clinic_id;
-        if ($doctor->save()){
-            return [
-                'result' => $doctor,
-            ];
+        if($doctor->save()){
+            return $this->returnData("doctor",$doctor,"doctor updated successfully");
+
         }
+        else
+            return $this->returnError("999","something goes rung");
     }
 
 
@@ -137,14 +156,14 @@ class DoctorController extends Controller
         $doctor = Doctor::find($id);
         $result = $doctor->delete();
         if ($result){
-            return ["result" => "the doctor has deleted"];
+            return $this->returnSuccessMessage("doctor deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 
     }
-
 
 }
