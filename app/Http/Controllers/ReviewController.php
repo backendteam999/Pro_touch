@@ -14,15 +14,17 @@ class ReviewController extends Controller
     public function index()
     {
         $review = Review::get();
-        return[
-            'info' => $review,
-        ];
+        if($review) {
+            return $this->returnData("review", $review, "this is all reviews");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $rules = [
             'patient_id'=> 'integer|required',
             'doctor_id'=> 'integer|required',
@@ -34,8 +36,12 @@ class ReviewController extends Controller
             'next_view'=> 'String|required',
         ];
 
-        $this->validate($request ,$rules );
 
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $review = Review::create([
             'patient_id' => $request->patient_id,
             'doctor_id' => $request->doctor_id,
@@ -45,11 +51,8 @@ class ReviewController extends Controller
             'notes'=> $request->notes,
             'next_view'=> $request->next_view,
         ]);
+        return $this->returnData("review",$review,"review added successfully");
 
-        return [
-
-            'review'=>$review,
-        ];
     }
 
 
@@ -59,15 +62,17 @@ class ReviewController extends Controller
     public function show($id)
     {
         $review = Review::get()->where('id',$id);
-        return [
-            'review info' => $review,
-        ];
+        if($review) {
+            return $this->returnData("review", $review, "this is the review that you want");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $review = Review::find($id);
         $rules = [
             'patient_id'=> 'integer|required',
@@ -80,7 +85,12 @@ class ReviewController extends Controller
             'next_view'=> 'String|required',
         ];
 
-        $this->validate($request ,$rules );
+
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $review->patient_id = $request->patient_id;
         $review->doctor_id = $request->doctor_id;
         $review->clinic_id = $request->clinic_id;
@@ -88,11 +98,12 @@ class ReviewController extends Controller
         $review->reservation_id = $request->reservation_id;
         $review->notes = $request->notes;
         $review->next_view = $request->next_view;
-        if($review->save()) {
-            return [
-                'review' => $review,
-            ];
+        if($review->save()){
+            return $this->returnData("review",$review,"review updated successfully");
+
         }
+        else
+            return $this->returnError("999","something goes rung");
 
     }
 

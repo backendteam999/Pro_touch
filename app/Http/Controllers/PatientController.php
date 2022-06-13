@@ -16,14 +16,16 @@ class PatientController extends Controller
     public function index()
     {
         $patient = Patient::get();
-        return[
-            'info' => $patient,
-        ];
+        if($patient) {
+            return $this->returnData("patient", $patient, "this is all patients");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $user_rules = [
             'name'=> 'string|required',
             'email'=> 'integer|required',
@@ -31,8 +33,11 @@ class PatientController extends Controller
             'phone_number'=> 'string|required',
         ];
 
-        $this->validate($request ,$user_rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$user_rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $user =User::create([
             'name'=> $request->name,
             'email' => $request->email,
@@ -46,8 +51,11 @@ class PatientController extends Controller
             'gender'=> 'string|required',
             'user_id'=>'integer|required',
         ];
-        $this->validate($request ,$patient_rules );
-
+        $patient_validator= \Illuminate\Support\Facades\Validator::make($input ,$patient_rules );
+        if ($patient_validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($patient_validator);
+            return $this->returnValidationError($code, $patient_validator);
+        }
         $patient = Patient::create([
             'name' => $request->name,
             'age' => $request->age,
@@ -55,10 +63,8 @@ class PatientController extends Controller
             'user_id' => $request->user_id,
         ]);
 
-        return [
+        return $this->returnData("patient",$patient,"patient added successfully");
 
-            'patient'=>$patient,
-        ];
     }
 
 
@@ -66,15 +72,17 @@ class PatientController extends Controller
     public function show($id)
     {
         $patient = Patient::get()->where('id',$id);
-        return [
-            'doctor info' => $patient,
-        ];
+        if($patient) {
+            return $this->returnData("patient", $patient, "this is the patient that you want");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $user = User::find($id);
         $user_rules =[
             'name'=> 'string|required',
@@ -82,16 +90,18 @@ class PatientController extends Controller
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
-        $this->validate($request ,$user_rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$user_rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
         $user->phone_number = $request->phone_number;
         if ($user->save()){
-            return [
-                'result' => "user updated",
-            ];
+            return $this->returnData("user",$user,"user updated successfully");
+
         }
 
 
@@ -101,18 +111,22 @@ class PatientController extends Controller
             'gender'=> 'string|required',
             'user_id'=>'integer|required',
         ];
-        $this->validate($request ,$patient_rules );
-
+        $patient_validator= \Illuminate\Support\Facades\Validator::make($input ,$patient_rules );
+        if ($patient_validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($patient_validator);
+            return $this->returnValidationError($code, $patient_validator);
+        }
         $patien = Patient::find($id);
         $patien->name = $request->name;
         $patien->age = $request->age;
         $patien->gender = $request->gender;
         $patien->user_id = $request->user_id;
-        if ($patien->save()){
-            return [
-                'result' => "user updated",
-            ];
+        if($patien->save()){
+            return $this->returnData("patient",$patien,"v updated successfully");
+
         }
+        else
+            return $this->returnError("999","something goes rung");
 
     }
 
@@ -123,10 +137,11 @@ class PatientController extends Controller
         $patient = Patient::find($id);
         $result = $patient->delete();
         if ($result){
-            return ["result" => "the patient has deleted"];
+            return $this->returnSuccessMessage("patient deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 

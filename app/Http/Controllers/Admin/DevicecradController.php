@@ -6,30 +6,39 @@ use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Reception;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DevicecradController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
         $device = Device::get();
-        return[
-            'info' => $device,
-        ];
+        if($device) {
+            return $this->returnData("device", $device, "this is all devices");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $rules = [
             'service_id'=> 'integer|required',
             'name'=> 'tring|required',
             'description'=> 'text|required',
         ];
 
-        $this->validate($request ,$rules );
+        $validator= Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
 
         $device = Device::create([
             'service_id' => $request->service_id,
@@ -37,10 +46,7 @@ class DevicecradController extends Controller
             'description' => $request->description,
         ]);
 
-        return [
-
-            'device'=>$device,
-        ];
+        return $this->returnData("device",$device,"device added successfully");
     }
 
 
@@ -50,32 +56,38 @@ class DevicecradController extends Controller
     public function show($id)
     {
         $device = Device::get()->where('id',$id);
-        return [
-            'device info' => $device,
-        ];    }
+        if($device) {
+            return $this->returnData("device", $device, "this is the device that you want");
+        }
+        return $this->returnError("999","something goes rung");    }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $device = Device::find($id);
         $rules = [
             'service_id'=> 'integer|required',
             'name'=> 'string|required',
             'description'=> 'text|required',
         ];
-        $this->validate($request ,$rules );
+        $validator= Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
 
         $device->service_id = $request->service_id;
         $device->name = $request->name;
         $device->description = $request->description;
 
-        if($device->seve()){
-            return [
+        if($device->save()){
+            return $this->returnData("device",$device,"device updated successfully");
 
-                'device'=>$device,
-            ];
         }
+        else
+            return $this->returnError("999","something goes rung");
     }
 
 
@@ -85,10 +97,11 @@ class DevicecradController extends Controller
         $device = Device::find($id);
         $result = $device->delete();
         if ($result){
-            return ["result" => "the device has deleted"];
+            return $this->returnSuccessMessage("device deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 

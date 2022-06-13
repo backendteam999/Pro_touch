@@ -14,15 +14,17 @@ class ReservationController extends Controller
     public function index()
     {
         $reservation = Reservation::get();
-        return[
-            'info' => $reservation,
-        ];
+        if($reservation) {
+            return $this->returnData("reservation", $reservation, "this is all reservations");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $rules = [
             'patient_id'=> 'integer|required',
             'doctor_id'=> 'integer|required',
@@ -36,8 +38,11 @@ class ReservationController extends Controller
             'offset'=> 'integer|min:1|max:60|required',
         ];
 
-        $this->validate($request ,$rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $reservation = Reservation::create([
             'patient_id' => $request->patient_id,
             'doctor_id' => $request->doctor_id,
@@ -50,11 +55,8 @@ class ReservationController extends Controller
             'Confirmation'=> $request->Confirmation,
             'offset'=> $request->offset,
         ]);
+        return $this->returnData("reservation",$reservation,"reservation added successfully");
 
-        return [
-
-            'reservation'=>$reservation,
-        ];
     }
 
 
@@ -64,15 +66,17 @@ class ReservationController extends Controller
     public function show($id)
     {
         $reservation = Doctor::get()->where('id',$id);
-        return [
-            'reservation info' =>$reservation,
-        ];
+        if($reservation) {
+            return $this->returnData("reservation", $reservation, "this is the reservation that you want");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $reservation = Reservation::find($id);
         $rules = [
             'patient_id'=> 'integer|required',
@@ -86,8 +90,11 @@ class ReservationController extends Controller
             'Confirmation'=> 'boolean|required',
             'offset'=> 'integer|min:1|max:60|required',
         ];
-        $this->validate($request ,$rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
 
         $reservation->patient_id = $request->patient_id;
         $reservation->doctor_id = $request->doctor_id;
@@ -99,11 +106,12 @@ class ReservationController extends Controller
         $reservation->status = $request->status;
         $reservation->Confirmation = $request->Confirmation;
         $reservation->offset = $request->offset;
-        if($reservation->save()) {
-            return [
-                'reservation' => $reservation,
-            ];
+        if($reservation->save()){
+            return $this->returnData("reservation",$reservation,"reservation updated successfully");
+
         }
+        else
+            return $this->returnError("999","something goes rung");
     }
 
 
@@ -113,10 +121,11 @@ class ReservationController extends Controller
         $reservation = Reservation::find($id);
         $result = $reservation->delete();
         if ($result){
-            return ["result" => "the reservation has deleted"];
+            return $this->returnSuccessMessage("reservation deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 

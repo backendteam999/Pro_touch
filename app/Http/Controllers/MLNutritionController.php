@@ -13,15 +13,17 @@ class MLNutritionController extends Controller
     public function index()
     {
         $ml_nutrition = ML_Nutrition_Clinic::get();
-        return[
-            'info' => $ml_nutrition,
-        ];
+        if($ml_nutrition) {
+            return $this->returnData("ml_nutrition", $ml_nutrition, "this is all ml_nutritions");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $rules = [
             'food_allergy'=> 'string|required',
             'job'=> 'string|required',
@@ -32,8 +34,11 @@ class MLNutritionController extends Controller
 
         ];
 
-        $this->validate($request ,$rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $ml_nutrition = ML_Nutrition_Clinic::create([
             'food_allergy' => $request->food_allergy,
             'job' => $request->job,
@@ -42,11 +47,8 @@ class MLNutritionController extends Controller
             'sport_schedule' => $request->sport_schedule,
             'medical_log_id'=> $request->clinic_id,
         ]);
+        return $this->returnData("ml_nutrition",$ml_nutrition,"ml_nutrition added successfully");
 
-        return [
-
-            'ml_nutrition'=>$ml_nutrition,
-        ];
     }
 
 
@@ -56,14 +58,16 @@ class MLNutritionController extends Controller
     public function show($id)
     {
         $ml_nutrition = Doctor::get()->where('id',$id);
-        return [
-            'ml nutrition info' => $ml_nutrition,
-        ];    }
+        if($ml_nutrition) {
+            return $this->returnData("ml_nutrition", $ml_nutrition, "this is the ml_nutrition that you want");
+        }
+        return $this->returnError("999","something goes rung");    }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $ml_nutrition = ML_Nutrition_Clinic::find($id);
         $rules = [
             'food_allergy'=> 'string|required',
@@ -74,8 +78,11 @@ class MLNutritionController extends Controller
             'medical_log_id'=> 'integer|required',
 
         ];
-        $this->validate($request ,$rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
 
         $ml_nutrition->food_allergy = $request->food_allergy;
         $ml_nutrition->job = $request->job;
@@ -83,12 +90,12 @@ class MLNutritionController extends Controller
         $ml_nutrition->age = $request->specialization;
         $ml_nutrition->sport_schedule = $request->sport_schedule;
         $ml_nutrition->medical_log_id = $request->clinic_id;
-        if ($ml_nutrition->save()){
-            return [
+        if($ml_nutrition->save()){
+            return $this->returnData("ml_nutrition",$ml_nutrition,"ml_nutrition updated successfully");
 
-                'ml_nutrition'=>$ml_nutrition,
-            ];
         }
+        else
+            return $this->returnError("999","something goes rung");
 
     }
 
@@ -99,10 +106,11 @@ class MLNutritionController extends Controller
         $ml_nutrition = ML_Nutrition_Clinic::find($id);
         $result = $ml_nutrition->delete();
         if ($result){
-            return ["result" => "the ml_nutrition has deleted"];
+            return $this->returnSuccessMessage("ml_nutrition deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 

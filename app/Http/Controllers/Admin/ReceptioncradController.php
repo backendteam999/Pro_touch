@@ -19,9 +19,10 @@ class ReceptioncradController extends Controller
     public function index()
     {
         $reception = Reception::get();
-        return[
-            'info' => $reception,
-        ];
+        if($reception) {
+            return $this->returnData("reception", $reception, "this is all receptions");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
@@ -29,6 +30,7 @@ class ReceptioncradController extends Controller
     /////////////////////////////////// Store //////////////////////////////////
     public function store(Request $request)
     {
+        $input = $request->all();
         $user_rules = [
             'name'=> 'string|required',
             'email'=> 'integer|required',
@@ -36,8 +38,11 @@ class ReceptioncradController extends Controller
             'phone_number'=> 'string|required',
         ];
 
-        $this->validate($request ,$user_rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$user_rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $user =User::create([
             'name'=> $request->name,
             'email' => $request->email,
@@ -52,8 +57,11 @@ class ReceptioncradController extends Controller
             'skills'=> 'string|required',
             'user_id'=>'integer|required',
         ];
-        $this->validate($request ,$reception_rules );
-
+        $reception_validator= \Illuminate\Support\Facades\Validator::make($input ,$reception_rules );
+        if ($reception_validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($reception_validator);
+            return $this->returnValidationError($code, $reception_validator);
+        }
         $reception = Reception::create([
             'name' => $request->name,
             'age' => $request->age,
@@ -61,10 +69,8 @@ class ReceptioncradController extends Controller
             'skills' => $request->skills,
             'user_id' => $request->user_id,
         ]);
-        return [
+        return $this->returnData("reception",$reception,"reception added successfully");
 
-            'reception'=>$reception,
-        ];
     }
 
 
@@ -72,15 +78,17 @@ class ReceptioncradController extends Controller
     public function show($id)
     {
         $reception = Doctor::get()->where('id',$id);
-        return [
-            'reception info' => $reception,
-        ];
+        if($reception) {
+            return $this->returnData("reception", $reception, "this is the device that you want");
+        }
+        return $this->returnError("999","something goes rung");
     }
 
 
     /////////////////////////////////// Update //////////////////////////////////
     public function update(Request $request, $id)
     {
+        $input = $request->all();
         $user = User::find($id);
         $user_rules =[
             'name'=> 'string|required',
@@ -88,16 +96,18 @@ class ReceptioncradController extends Controller
             'password'=> 'string|required',
             'phone_number'=> 'string|required',
         ];
-        $this->validate($request ,$user_rules );
-
+        $validator= \Illuminate\Support\Facades\Validator::make($input ,$user_rules );
+        if ($validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($validator);
+            return $this->returnValidationError($code, $validator);
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = $request->password;
         $user->phone_number = $request->phone_number;
         if ($user->save()){
-            return [
-                'result' => "user updated",
-            ];
+            return $this->returnData("user",$user,"user updated successfully");
+
         }
 
 
@@ -109,18 +119,22 @@ class ReceptioncradController extends Controller
             'skills'=> 'string|required',
             'user_id'=>'integer|required',
         ];
-        $this->validate($request ,$reception_rules );
-
+        $reception_validator= \Illuminate\Support\Facades\Validator::make($input ,$reception_rules );
+        if ($reception_validator->fails()) {
+            $code = $this->returnCodeAccordingToInput($reception_validator);
+            return $this->returnValidationError($code, $reception_validator);
+        }
         $reception->name = $request->name;
         $reception->age = $request->age;
         $reception->gender = $request->gender;
         $reception->skills = $request->skills;
         $reception->user_id = $request->user_id;
-        if ($reception->save()){
-            return [
-                'reception' => $reception,
-            ];
+        if($reception->save()){
+            return $this->returnData("reception",$reception,"reception updated successfully");
+
         }
+        else
+            return $this->returnError("999","something goes rung");
     }
 
 
@@ -130,10 +144,11 @@ class ReceptioncradController extends Controller
         $reception = Reception::find($id);
         $result = $reception->delete();
         if ($result){
-            return ["result" => "the reception has deleted"];
+            return $this->returnSuccessMessage("reception deleted successfully");
         }
         else{
-            return ["result" => "operation failed"];
+            return $this->returnError("999","something goes rung");
+
         }
 
 
