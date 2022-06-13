@@ -7,10 +7,12 @@ use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Service;
 use App\Models\User;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class ServicecradController extends Controller
 {
+    use GeneralTrait;
 
     /////////////////////////////////// Index //////////////////////////////////
     public function index()

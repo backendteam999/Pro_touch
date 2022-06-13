@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Offer;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class OffercradController extends Controller
 {
+    use GeneralTrait;
     //
     /////////////////////////////////// Index //////////////////////////////////
     public function index()

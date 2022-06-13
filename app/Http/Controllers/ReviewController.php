@@ -6,10 +6,12 @@ use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Review;
 use App\Models\User;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {

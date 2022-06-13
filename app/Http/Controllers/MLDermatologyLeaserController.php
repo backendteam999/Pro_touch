@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\ML_DematologyAndLeaser;
 use App\Models\ML_Dental_Clinic;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class MLDermatologyLeaserController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {

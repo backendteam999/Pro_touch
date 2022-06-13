@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Medical_log;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class MedicalLogController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {

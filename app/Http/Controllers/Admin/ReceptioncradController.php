@@ -8,11 +8,12 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Reception;
 use App\Models\User;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class ReceptioncradController extends Controller
 {
-
+    use GeneralTrait;
 
 
     /////////////////////////////////// Index //////////////////////////////////

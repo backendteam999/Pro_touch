@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Models\Medical_log;
 use App\Models\ML_Dental_Clinic;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class MLDentalController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {

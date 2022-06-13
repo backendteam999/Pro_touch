@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Resources\DoctorResouce;
 use App\Models\Device;
 use App\Models\Doctor;
+use App\Traits\GeneralTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 
 class DoctorcardController extends Controller
 {
+    use GeneralTrait;
 
     /////////////////////////////////// Index //////////////////////////////////
     public function index()

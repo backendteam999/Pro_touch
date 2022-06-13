@@ -6,10 +6,12 @@ use App\Models\Device;
 use App\Models\Doctor;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+    use GeneralTrait;
     /////////////////////////////////// Index //////////////////////////////////
     public function index()
     {
