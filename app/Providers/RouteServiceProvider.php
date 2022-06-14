@@ -46,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
             /////////////////////////////////////////
 
 
-            Route::prefix('clinic')
+            Route::prefix('api')
                // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/clinic.php'));
@@ -54,7 +54,7 @@ class RouteServiceProvider extends ServiceProvider
 
             ///////////////////////////////////////////
 
-            Route::prefix('device')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/device.php'));
@@ -62,7 +62,7 @@ class RouteServiceProvider extends ServiceProvider
 
             ///////////////////////////////////////////
 
-            Route::prefix('doctor')
+            Route::prefix('api')
                  ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/doctor.php'));
@@ -70,7 +70,7 @@ class RouteServiceProvider extends ServiceProvider
 
             ///////////////////////////////////////////
 
-            Route::prefix('medical_log')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/medical_log.php'));
@@ -79,7 +79,7 @@ class RouteServiceProvider extends ServiceProvider
             ///////////////////////////////////////////
 
 
-            Route::prefix('ml_dental')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/ml_dental.php'));
@@ -87,7 +87,7 @@ class RouteServiceProvider extends ServiceProvider
 
             ///////////////////////////////////////////
 
-            Route::prefix('ml_dermatology_leaser')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/ml_dermatology_leaser.php'));
@@ -96,7 +96,7 @@ class RouteServiceProvider extends ServiceProvider
             ///////////////////////////////////////////
 
 
-            Route::prefix('ml_nutrition')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/ml_nutrition.php'));
@@ -106,7 +106,7 @@ class RouteServiceProvider extends ServiceProvider
 
 
 
-            Route::prefix('offers')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/offers.php'));
@@ -114,14 +114,14 @@ class RouteServiceProvider extends ServiceProvider
 
             ///////////////////////////////////////////
 
-            Route::prefix('patient')
+            Route::prefix('api')
                  ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/patient.php'));
 
 
             ///////////////////////////////////////////
-            Route::prefix('reception')
+            Route::prefix('api')
                  ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/reception.php'));
@@ -129,19 +129,19 @@ class RouteServiceProvider extends ServiceProvider
 
             ///////////////////////////////////////////
 
-            Route::prefix('reservation')
+            Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/reservation.php'));
 
 
             ///////////////////////////////////////////
-              Route::prefix('review')
+              Route::prefix('api')
                 // ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/review.php'));
               ///////////////////////////////////////////
-              Route::prefix('admin')
+              Route::prefix('api')
                  ->middleware('api')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/admin.php'));

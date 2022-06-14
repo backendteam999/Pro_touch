@@ -17,10 +17,10 @@ use App\Http\Controllers\LoginController;
 */
 
 
-Route::post('doctor/login',[LoginController::class, 'userLogin'])->name('userLogin');
-Route::group( ['middleware' => ['auth:user-api','scopes:user'] ],function(){
+Route::post('user/doctor/login',[LoginController::class, 'userLogin'])->name('userLogin');
+Route::group( ['prefix' => 'doctor','middleware' => ['auth:user-api','scopes:user'] ],function(){
     // authenticated staff routes here
-    Route::get('dashboard',[LoginController::class, 'userDashboard']);
+//    Route::get('dashboard',[LoginController::class, 'userDashboard']);
     /////////////////////////////////// Patient //////////////////////////////////
     Route::group( ['prefix' => 'patient','namespace' => 'Patient'],function(){
         Route::get('/', 'PatientController@index');

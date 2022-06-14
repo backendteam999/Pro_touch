@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('/login',[LoginController::class, 'adminLogin'])->name('adminLogin');
-Route::group( ['middleware' => ['auth:admin-api','scopes:admin'] ],function(){
+Route::post('admin/login',[LoginController::class, 'adminLogin'])->name('adminLogin');
+Route::group( ['prefix' => 'admin','middleware' => ['auth:admin-api','scopes:admin'] ],function(){
     // authenticated staff routes here
-    Route::get('dashboard',[LoginController::class, 'adminDashboard']);
+  //  Route::get('dashboard',[LoginController::class, 'adminDashboard']);
 //    Route::get('/','AdminController@index');
 //    Route::post('/store', 'AdminController@store');
 //    Route::get('/show/{id}', 'AdminController@show');
